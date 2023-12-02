@@ -23,13 +23,30 @@ SERIAL_SOCKET="$(cfg 'serial_socket')"
 TZ="$(cfg timezone)"
 export TZ
 
-jq -s \
+CFG="$(jq -s \
   --arg APP_SECRET "${APP_SECRET}" \
   --argjson PASS_REQS "${PASS_REQS}" \
-  --arg SERIAL_TTY "${SERIAL_TTY}" \
-  --arg SERIAL_SOCKET "${SERIAL_SOCKET}" \
-  '{"app_secret":$APP_SECRET,"pass_reqs":$PASS_REQS,"serial_tty":$SERIAL_TTY,"serial_socket":$SERIAL_SOCKET}' \
-  < /dev/null > /infinitude/infinitude.json
+  '{"app_secret":$APP_SECRET,"pass_reqs":$PASS_REQS}' \
+  < /dev/null)"
+
+if [[ -n "${SERIAL_TTY}" ]]
+then
+  CFG="$(jq \
+    --arg SERIAL_TTY "${SERIAL_TTY}" \
+    '. + {"serial_tty":$SERIAL_TTY}' \
+    <<< "${CFG}")"
+fi
+
+if [[ -n "${SERIAL_SOCKET}" ]]
+then
+  CFG="$(jq \
+    --arg SERIAL_TTY "${SERIAL_SOCKET}" \
+    '. + {"serial_tty":$SERIAL_SOCKET}' \
+    <<< "${CFG}")"
+fi
+
+
+echo "${CFG}" > /infinitude/infinitude.json
 
 rm -rf /infinitude/state
 mkdir -p /data/infinitude/state
