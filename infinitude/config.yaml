@@ -1,6 +1,6 @@
 name: "Infinitude"
 description: "Run infinitude by nebulous as a Home Assistant Add-On, by sosheskaz"
-version: "0.0.1-pre4"
+version: "0.0.1-pre5"
 slug: "infinitude"
 init: true
 arch:
@@ -23,4 +23,4 @@ schema:
   serial_socket: str?
   state_path: str
 ports:
-  34500/tcp: 3000
+  3000/tcp: 34500
