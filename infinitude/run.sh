@@ -30,6 +30,7 @@ jq -s \
   < /dev/null > /infinitude/infinitude.json
 
 rm -rf /infinitude/state
-ln -sfT /share/infinitude/state /infinitude/state
+mkdir -p /data/infinitude/state
+ln -sfT /data/infinitude/state /infinitude/state
 
-/infinitude/entrypoint.sh
+/infinitude/entrypoint.sh "$@"
