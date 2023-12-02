@@ -11,6 +11,8 @@ arch:
 options:
   app_secret: Pogotudinal
   mode: Production
+  serial_tty: ""
+  serial_socket: ""
   timezone: "Etc/UTC"
 schema:
   app_secret: str

@@ -5,7 +5,7 @@ set -e
 CONFIG_PATH=/data/options.json
 
 cfg() {
-  jq --arg key "$1" '.[$key]' < "${CONFIG_PATH}"
+  jq -r --arg key "$1" '.[$key]' < "${CONFIG_PATH}"
 }
 
 MODE="$(cfg 'mode')"
@@ -40,7 +40,7 @@ fi
 if [[ -n "${SERIAL_SOCKET}" ]]
 then
   CFG="$(jq \
-    --arg SERIAL_TTY "${SERIAL_SOCKET}" \
+    --arg SERIAL_SOCKET "${SERIAL_SOCKET}" \
     '. + {"serial_tty":$SERIAL_SOCKET}' \
     <<< "${CFG}")"
 fi
