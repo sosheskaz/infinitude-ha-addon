@@ -1,6 +1,6 @@
 name: "Infinitude"
 description: "Run infinitude by nebulous as a Home Assistant Add-On, by sosheskaz"
-version: "0.0.1-pre7"
+version: "0.0.1-pre8"
 slug: "infinitude"
 init: true
 arch:
@@ -13,10 +13,12 @@ options:
   mode: Production
   serial_tty: ""
   serial_socket: ""
+  timezone: "Etc/UTC"
 schema:
   app_secret: str
   mode: str
   serial_tty: str?
   serial_socket: str?
+  timezone: str
 ports:
   3000/tcp: 34500
