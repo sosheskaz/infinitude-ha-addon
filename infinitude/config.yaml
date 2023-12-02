@@ -1,0 +1,27 @@
+name: "Infinitude"
+description: "Run infinitude by nebulous as a Home Assistant Add-On, by sosheskaz"
+version: "0.0.1-pre2"
+slug: "infinitude"
+init: true
+arch:
+  - aarch64
+  - amd64
+  - armv7
+  - i386
+map:
+  - share:rw
+options:
+  app_secret: Pogotudinal
+  mode: Production
+  serial_tty: ""
+  serial_socket: ""
+  state_path: /share/infinitude/state
+schema:
+  port: int
+  app_secret: str
+  mode: str
+  serial_tty: str
+  serial_socket: str
+  state_path: str
+ports:
+  34500/tcp: 3000
