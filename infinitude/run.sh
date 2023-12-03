@@ -49,4 +49,4 @@ mkdir -p /data/infinitude/state
 ln -sfT /data/infinitude/state /infinitude/state
 
 cd /infinitude
-exec sudo -u infinitude ./infinitude daemon -m "${MODE}" "$@"
+exec ./infinitude daemon -m "${MODE}" "$@"
