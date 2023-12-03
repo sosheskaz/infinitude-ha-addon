@@ -19,8 +19,6 @@ APP_SECRET="$(cfg 'app_secret')"
 PASS_REQS="$(cfg 'pass_reqs')"
 SERIAL_TTY="$(cfg 'serial_tty')"
 SERIAL_SOCKET="$(cfg 'serial_socket')"
-TZ="$(cfg timezone)"
-export TZ
 
 CFG="$(jq -s \
   --arg APP_SECRET "${APP_SECRET}" \

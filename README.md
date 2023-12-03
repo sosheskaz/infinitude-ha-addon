@@ -9,16 +9,19 @@ It is not a part of the original project.
 
 Serial devices are not yet supported, as I do not have a serial device to test against.
 
-This addon is in early/immature stages and does not have a clean release lifecycle yet.
+This addon is in early/immature stages and does not have a clean development/release lifecycle yet.
+
+State is lost any time the container is rebuilt, including updates.
 
 ## Usage
 
-Some of the options from infinitude are included in this add-on. Configure those settings as
-appropriate for your installation.
+Some of the options from infinitude are included in this add-on. Defaults are generally the same as
+upstream. Configure those settings as appropriate for your installation. To enable extra logging,
+set `mode` to `Development`.
 
 This addon works by building an image with `docker.io/nebulous/infinitude:latest` as a base. Because
-of this, you may want to `Rebuild` occasionally to pull new changes. It is recommended to back up
-before rebuilding.
+of this, you may want to `Rebuild` occasionally to pull new changes from upstrea. It is recommended
+to back up before rebuilding.
 
 This exposes infinitude on a port (by default `34500`) on the home assistant machine. Consider any
 network security implications there may be.

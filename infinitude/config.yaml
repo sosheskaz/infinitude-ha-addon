@@ -1,6 +1,6 @@
 name: "Infinitude"
-description: "Run infinitude by nebulous as a Home Assistant Add-On, by sosheskaz"
-version: "0.0.1-pre13"
+description: Run Infinitude by nebulous as a Home Assistant Addon.
+version: "0.0.1-pre14"
 slug: "infinitude"
 init: true
 arch:
@@ -14,16 +14,16 @@ options:
   pass_reqs: 1020
   serial_tty: ""
   serial_socket: ""
-  timezone: "Etc/UTC"
 schema:
+  mode: list(Development|Production)
   app_secret: str
-  mode: str
-  pass_reqs: int
+  pass_reqs: int(0,)
   serial_tty: str?
   serial_socket: str?
-  timezone: str
 ports:
   3000/tcp: 34500
-ingress: true
-ingress_port: 3000
-webui: http://[HOST]:[PORT:3000]/#/
+ports_description:
+  3000/tcp: Port to expose infinitude's web server on.
+watchdog: http://[HOST]:[PORT:3000]/api/status
+panel_icon: mdi:sun-snowflake-variant
+stage: stable
