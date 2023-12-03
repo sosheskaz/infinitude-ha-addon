@@ -1,0 +1,29 @@
+name: "Infinitude (Experimental)"
+description: Run Infinitude by nebulous as a Home Assistant Addon.
+version: "experimental"
+slug: "infinitude-experimental"
+init: true
+arch:
+  - aarch64
+  - amd64
+  - armv7
+  - i386
+options:
+  app_secret: Pogotudinal
+  mode: Production
+  pass_reqs: 1020
+  serial_tty: ""
+  serial_socket: ""
+schema:
+  mode: list(Development|Production)
+  app_secret: str
+  pass_reqs: int(0,)
+  serial_tty: str?
+  serial_socket: str?
+ports:
+  3000/tcp: 34500
+ports_description:
+  3000/tcp: Port to expose infinitude's web server on.
+watchdog: http://[HOST]:[PORT:3000]/api/status
+panel_icon: mdi:sun-snowflake-variant
+stage: experimental
