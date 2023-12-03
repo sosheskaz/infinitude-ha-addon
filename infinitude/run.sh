@@ -9,7 +9,6 @@ cfg() {
 }
 
 MODE="$(cfg 'mode')"
-export MODE
 
 if [[ "${MODE}" = "Development" ]]
 then
@@ -45,11 +44,11 @@ then
     <<< "${CFG}")"
 fi
 
-
 echo "${CFG}" > /infinitude/infinitude.json
 
 rm -rf /infinitude/state
 mkdir -p /data/infinitude/state
 ln -sfT /data/infinitude/state /infinitude/state
 
-/infinitude/entrypoint.sh "$@"
+cd /infinitude
+exec sudo -u infinitude ./infinitude daemon -m "${MODE}" "$@"

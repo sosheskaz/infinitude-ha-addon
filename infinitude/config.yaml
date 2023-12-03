@@ -1,6 +1,6 @@
 name: "Infinitude"
 description: "Run infinitude by nebulous as a Home Assistant Add-On, by sosheskaz"
-version: "0.0.1-pre12"
+version: "0.0.1-pre13"
 slug: "infinitude"
 init: true
 arch:
@@ -24,3 +24,6 @@ schema:
   timezone: str
 ports:
   3000/tcp: 34500
+ingress: true
+ingress_port: 3000
+webui: http://[HOST]:[PORT:3000]/#/
