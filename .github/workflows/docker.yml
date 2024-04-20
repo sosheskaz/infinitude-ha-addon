@@ -5,9 +5,14 @@ jobs:
   build-images:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout GitHub Action"
-        uses: actions/checkout@main
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: "Build Inventory Image"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: "Build images"
         run: |
           docker buildx bake ci
