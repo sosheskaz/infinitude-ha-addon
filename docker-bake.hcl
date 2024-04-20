@@ -9,6 +9,19 @@ target "ci" {
   context = "docker"
 }
 
+target "infinitude" {
+  pull = true
+
+  platforms = ["linux/amd64", "linux/arm64"]
+
+  context = "infinitude-src"
+
+  tags = [
+    "docker.io/sosheskaz/infinitude:${VERSION}",
+  ]
+
+}
+
 target "release" {
   pull = true
 
@@ -22,8 +35,4 @@ target "release" {
     "docker.io/sosheskaz/ha-infinitude:${VERSION}",
     // "docker.io/sosheskaz/ha-infinitude:latest"
   ]
-}
-
-target "latest" {
-  extends = "release"
 }
