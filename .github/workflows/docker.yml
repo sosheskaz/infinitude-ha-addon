@@ -1,3 +1,4 @@
+---
 name: Test image build
 
 on: [push]  # yamllint disable-line rule:truthy
