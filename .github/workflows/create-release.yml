@@ -12,9 +12,10 @@ jobs:
     steps:
       - id: version
         name: Get version string
-        run: echo "VERSION=v$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_OUTPUT
     outputs:
-      VERSION: ${{ steps.version.outputs.VERSION }}
+      VERSION_SIMPLE: ${{ steps.version.outputs.VERSION }}
+      VERSION: v${{ steps.version.outputs.VERSION }}
       IMAGE_NAME: ghcr.io/sosheskaz/infinitude-ha-addon
 
   build-images:
@@ -68,22 +69,25 @@ jobs:
             Container image: `${{ needs.metadata.outputs.VERSION }}`
 
   update-infinitude:
-    needs: metadata
+    needs:
+      - metadata
+      - create-release
+      - build-images
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: mikefarah/yq@v4
       - name: Update Infinitude
         run: |
-          yq e -i '.version = "${{ needs.metadata.outputs.VERSION }}"' infinitude/config.yaml
-          yq e -i '.image = "${{ needs.metadata.outputs.IMAGE_NAME }}:${{ needs.metadata.outputs.VERSION }}"' infinitude/config.yaml
+          yq e -i '.version = "${{ needs.metadata.outputs.VERSION_SIMPLE }}"' infinitude-experimental/config.yaml
+          yq e -i '.image = "${{ needs.metadata.outputs.IMAGE_NAME }}:${{ needs.metadata.outputs.VERSION }}"' infinitude-experimental/config.yaml
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update Infinitude to ${{ needs.metadata.outputs.VERSION }}
-          title: Update Infinitude to ${{ needs.metadata.outputs.VERSION }}
+          commit-message: Update Infinitude Experimental to ${{ needs.metadata.outputs.VERSION }}
+          title: Update Infinitude Experimental to ${{ needs.metadata.outputs.VERSION }}
           body: |
             Update Infinitude to ${{ needs.metadata.outputs.VERSION }}
           branch: update-infinitude-${{ needs.metadata.outputs.VERSION }}
