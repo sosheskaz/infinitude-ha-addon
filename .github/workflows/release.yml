@@ -8,7 +8,7 @@ on:  # yamllint disable-line rule:truthy
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ghcr.io/sosheskaz/infinitude-ha-addon
-  INFINITUDE_BUILD: ghcr.io/sosheskaz/infinitude-core
+  INFINITUDE_IMAGE_NAME: ghcr.io/sosheskaz/infinitude-core:${{ github.event.release.tag_name }}
   VERSION: ${{ github.event.release.tag_name }}
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: build base image
-        run: docker buildx bake infinitude-base --load
+        run: docker buildx bake infinitude-base --push
 
       - name: build release image
         run: docker buildx bake release --push
