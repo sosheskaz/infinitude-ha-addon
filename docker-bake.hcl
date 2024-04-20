@@ -1,5 +1,5 @@
 variable "INFINITUDE_IMAGE_NAME" {
-  default = "infinitude-ha-addon"
+  default = "nebulous/infinitude:latest"
 }
 
 variable "IMAGE_NAME" {
