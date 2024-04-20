@@ -1,14 +1,12 @@
 ---
 name: "Infinitude (Experimental)"
 description: Run Infinitude by nebulous as a Home Assistant Addon.
-version: "2024.04.20.21"
+version: "v2024.04.20.21"
 slug: "infinitude-experimental"
 init: true
 arch:
   - aarch64
   - amd64
-  - armv7
-  - i386
 options:
   app_secret: Pogotudinal
   mode: Production
@@ -28,4 +26,3 @@ ports_description:
 watchdog: http://[HOST]:[PORT:3000]/api/status
 panel_icon: mdi:sun-snowflake-variant
 stage: experimental
-image: ghcr.io/sosheskaz/infinitude-ha-addon:v2024.04.20.21

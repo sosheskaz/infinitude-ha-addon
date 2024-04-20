@@ -1,5 +1,3 @@
-FROM docker.io/nebulous/infinitude:latest
+ARG BUILD_VERSION
 
-COPY run.sh /
-
-ENTRYPOINT ["/run.sh"]
+FROM ghcr.io/sosheskaz/infinitude-ha-addon:${BUILD_VERSION}
