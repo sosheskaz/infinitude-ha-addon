@@ -16,7 +16,7 @@ jobs:
       - name: yaml-lint
         uses: ibiqlik/action-yamllint@v3
 
-  build-images:
+  build-ci-images:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,5 +26,4 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: "Build images"
-        run: |
-          docker buildx bake ci
+        run: docker buildx bake ci
