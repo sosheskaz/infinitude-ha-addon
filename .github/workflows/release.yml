@@ -1,0 +1,37 @@
+---
+name: Build Release
+on: [release]  # yamllint disable-line rule:truthy
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ghcr.io/sosheskaz/infinitude-ha-addon
+  INFINITUDE_BUILD: ghcr.io/sosheskaz/infinitude-core
+  VERSION: ${{ github.event.release.tag_name }}
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: build base image
+        run: docker buildx bake infinitude-base
+
+      - name: build release image
+        run: docker buildx bake release --push

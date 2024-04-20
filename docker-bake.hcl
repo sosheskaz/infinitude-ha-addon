@@ -1,3 +1,11 @@
+variable "INFINITUDE_IMAGE_NAME" {
+  default = "nebulous/infinitude:latest"
+}
+
+variable "IMAGE_NAME" {
+  default = "infinitude_ha_addon"
+}
+
 variable "VERSION" {
 }
 
@@ -9,7 +17,7 @@ target "ci" {
   context = "docker"
 }
 
-target "infinitude" {
+target "infinitude-base" {
   pull = true
 
   platforms = ["linux/amd64", "linux/arm64"]
@@ -17,7 +25,7 @@ target "infinitude" {
   context = "infinitude-src"
 
   tags = [
-    "docker.io/sosheskaz/infinitude:${VERSION}",
+    "${INFINITUDE_IMAGE_NAME}",
   ]
 
 }
@@ -27,12 +35,13 @@ target "release" {
 
   platforms = ["linux/amd64", "linux/arm64"]
 
-  context {
-    dockerfile = "Dockerfile"
+  args = {
+    INFINITUDE_BASE = "${INFINITUDE_IMAGE_NAME}"
   }
 
+  context = "docker"
+
   tags = [
-    "docker.io/sosheskaz/ha-infinitude:${VERSION}",
-    // "docker.io/sosheskaz/ha-infinitude:latest"
+    "${IMAGE_NAME}:${VERSION}",
   ]
 }
