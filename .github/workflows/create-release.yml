@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ needs.metadata.outputs.IMAGE_NAME }
+      IMAGE_NAME: ${{ needs.metadata.outputs.IMAGE_NAME }}
       INFINITUDE_IMAGE_NAME: ghcr.io/sosheskaz/infinitude-core:${{ needs.metadata.outputs.VERSION }}
       VERSION: ${{ needs.metadata.outputs.VERSION }}
     steps:
@@ -80,3 +80,13 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update Infinitude to ${{ needs.metadata.outputs.VERSION }}
+          title: Update Infinitude to ${{ needs.metadata.outputs.VERSION }}
+          body: |
+            Update Infinitude to ${{ needs.metadata.outputs.VERSION }}
+          branch: update-infinitude-${{ needs.metadata.outputs.VERSION }}
+          base: main
+          reviewers: sosheskaz
+          assignees: sosheskaz
