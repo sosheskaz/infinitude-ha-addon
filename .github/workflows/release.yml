@@ -3,7 +3,7 @@ name: Build Release
 on:  # yamllint disable-line rule:truthy
   release:
     types:
-      - published
+      - created
 
 env:
   REGISTRY: ghcr.io
