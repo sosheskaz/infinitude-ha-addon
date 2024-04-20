@@ -1,3 +1,4 @@
+---
 # https://developers.home-assistant.io/docs/add-ons/repository#repository-configuration
 name: Infinitude
 url: 'https://github.com/sosheskaz/infinitude-ha-addon'
