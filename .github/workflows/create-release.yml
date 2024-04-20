@@ -45,13 +45,17 @@ jobs:
 
       - name: build release image
         run: docker buildx bake release --push
+    outputs:
+      IMAGE_NAME: ${{ env.IMAGE_NAME }}
+      INFINITUDE_IMAGE_NAME: ${{ env.INFINITUDE_IMAGE_NAME }}
 
   create-release:
-    needs: build-images
+    needs:
+      - metadata
+      - build-images
 
     runs-on: ubuntu-latest
     steps:
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -60,4 +64,5 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.VERSION }}
           release_name: Release ${{ steps.version.outputs.VERSION }}
-          generateReleaseNotes: true
+          body: |
+            Container image: `ghcr.io/sosheskaz/infinitude-ha-addon:${{ steps.version.outputs.VERSION }}`
