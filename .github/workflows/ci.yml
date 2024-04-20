@@ -1,5 +1,5 @@
 ---
-name: pre-commit
+name: CI
 on: [push]  # yamllint disable-line rule:truthy
 jobs:
   pre-commit:
