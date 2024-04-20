@@ -3,7 +3,7 @@ name: Perform a release
 
 on:  # yamllint disable-line rule:truthy
   push:
-    branches: [main]
+    branches: [release]
   workflow_dispatch:
 
 jobs:
@@ -15,13 +15,14 @@ jobs:
         run: echo "VERSION=v$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_OUTPUT
     outputs:
       VERSION: ${{ steps.version.outputs.VERSION }}
+      IMAGE_NAME: ghcr.io/sosheskaz/infinitude-ha-addon
 
   build-images:
     needs: metadata
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ghcr.io/sosheskaz/infinitude-ha-addon
+      IMAGE_NAME: ${{ needs.metadata.outputs.IMAGE_NAME }
       INFINITUDE_IMAGE_NAME: ghcr.io/sosheskaz/infinitude-core:${{ needs.metadata.outputs.VERSION }}
       VERSION: ${{ needs.metadata.outputs.VERSION }}
     steps:
@@ -46,8 +47,7 @@ jobs:
       - name: build release image
         run: docker buildx bake release --push
     outputs:
-      IMAGE_NAME: ${{ env.IMAGE_NAME }}
-      INFINITUDE_IMAGE_NAME: ${{ env.INFINITUDE_IMAGE_NAME }}
+      IMAGE: ${{ env.IMAGE_NAME }}:${{ needs.metadata.outputs.VERSION }}
 
   create-release:
     needs:
@@ -65,4 +65,18 @@ jobs:
           tag_name: ${{ needs.metadata.outputs.VERSION }}
           release_name: Release ${{ needs.metadata.outputs.VERSION }}
           body: |
-            Container image: `ghcr.io/sosheskaz/infinitude-ha-addon:${{ steps.version.outputs.VERSION }}`
+            Container image: `${{ needs.metadata.outputs.VERSION }}`
+
+  update-infinitude:
+    needs: metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mikefarah/yq@v4
+      - name: Update Infinitude
+        run: |
+          yq e -i ".version = \"${{ needs.metadata.outputs.VERSION }}\"" infinitude/config.yaml
+          yq e -i ".image = '${{ needs.metadata.outputs.IMAGE_NAME }}:${{ needs.metadata.outputs.VERSION }}"'' infinitude/config.yaml
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
