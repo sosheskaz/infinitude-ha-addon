@@ -8,7 +8,7 @@ jobs:
     steps:
       - id: version
         name: Get version string
-        run: echo "VERSION=v$(date +'+%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_OUTPUT
+        run: echo "VERSION=v$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
