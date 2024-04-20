@@ -22,7 +22,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ghcr.io/sosheskaz/infinitude-ha-addon
-      INFINITUDE_IMAGE_NAME: ghcr.io/sosheskaz/infinitude-core:${{ github.event.release.tag_name }}
+      INFINITUDE_IMAGE_NAME: ghcr.io/sosheskaz/infinitude-core:${{ needs.metadata.outputs.VERSION }}
       VERSION: ${{ needs.metadata.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v4
