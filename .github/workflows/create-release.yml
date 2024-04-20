@@ -1,7 +1,11 @@
 ---
 name: Perform a release
 
-on: [workflow_dispatch]  # yamllint disable-line rule:truthy
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main]
+  workflow_dispatch:
+
 jobs:
   build-images:
     runs-on: ubuntu-latest
@@ -18,4 +22,4 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.VERSION }}
           release_name: Release ${{ steps.version.outputs.VERSION }}
-          draft: true
+          prerelease: true
