@@ -1,9 +1,6 @@
 ---
 name: Build Release
-on:  # yamllint disable-line rule:truthy
-  release:
-    types:
-      - created
+on: [release]  # yamllint disable-line rule:truthy
 
 env:
   REGISTRY: ghcr.io
