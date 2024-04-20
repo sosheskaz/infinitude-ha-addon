@@ -1,6 +1,9 @@
 ---
 name: Build Release
-on: [release]  # yamllint disable-line rule:truthy
+on:  # yamllint disable-line rule:truthy
+  release:
+    types:
+      - published
 
 env:
   REGISTRY: ghcr.io
@@ -31,7 +34,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: build base image
-        run: docker buildx bake infinitude-base
+        run: docker buildx bake infinitude-base --load
 
       - name: build release image
         run: docker buildx bake release --push
