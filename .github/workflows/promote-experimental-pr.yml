@@ -17,8 +17,8 @@ jobs:
         id: experimental_version
         run: |
           VERSION="$(yq e .version infinitude-experimental/config.yaml)"
-          echo "EXPERIMENTAL_VERSION=${VERSION}" >> $GITHUB_OUTPUT
           IMAGE="$(yq e .image infinitude-experimental/config.yaml)"
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
           echo "IMAGE=${IMAGE}" >> $GITHUB_OUTPUT
 
       - name: Update the stable version
