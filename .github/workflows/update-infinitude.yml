@@ -1,5 +1,5 @@
 ---
-name: Promote Experimental to Stable
+name: Update Infinitude Source
 
 on:  # yamllint disable-line rule:truthy
   push:
