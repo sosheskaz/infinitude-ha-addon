@@ -16,12 +16,15 @@ jobs:
       - name: Get experimental version
         id: experimental_version
         run: |
-          VERSION="$(yq e -i '.version = "${{ needs.metadata.outputs.VERSION }}"' infinitude-experimental/config.yaml)"
+          VERSION="$(yq e .version infinitude-experimental/config.yaml)"
           echo "EXPERIMENTAL_VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          IMAGE="$(yq e .image infinitude-experimental/config.yaml)"
+          echo "IMAGE=${IMAGE}" >> $GITHUB_OUTPUT
 
       - name: Update the stable version
         run: |
           yq e -i '.version = "${{ needs.metadata.outputs.VERSION }}"' infinitude/config.yaml
+          yq e -i '.image = "${{ steps.experimental_version.outputs.IMAGE }}"' infinitude/config.yaml
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
