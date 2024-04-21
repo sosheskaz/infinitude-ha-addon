@@ -22,7 +22,6 @@ jobs:
       - name: Update infinitude
         run: |
           git submodule update infinitude-src
-          git submodule sync infinitude-src
 
       - name: Get new version
         id: new_version
