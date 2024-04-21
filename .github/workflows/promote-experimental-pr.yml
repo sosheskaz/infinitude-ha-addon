@@ -1,10 +1,10 @@
 ---
-name: Perform a release
+name: Promote Experimental to Stable
 
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - &base auto-promote
+      - auto-promote
 
 jobs:
   update-infinitude:
@@ -34,6 +34,6 @@ jobs:
             Update Infinitude to ${{ needs.metadata.outputs.VERSION }}
           branch: promote-experimental-to-stable
           delete-branch: true
-          base: *base
+          base: auto-promote
           reviewers: sosheskaz
           assignees: sosheskaz
