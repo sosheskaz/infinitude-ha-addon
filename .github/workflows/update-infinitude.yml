@@ -1,0 +1,42 @@
+---
+name: Promote Experimental to Stable
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - auto-update-infinitude
+
+jobs:
+  update-infinitude:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Get current version
+        id: cur_version
+        run: |
+          echo "OLD_VERSION=$(git -C infinitude-src describe --tags --always)" >> $GITHUB_OUTPUT
+
+      - name: Update infinitude
+        run: git submodule update infinitude-src
+
+      - name: Get new version
+        id: new_version
+        run: |
+          echo "NEW_VERSION=$(git -C infinitude-src describe --tags --always)" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # use the output from the previous task
+          commit-message: Update Infinitude from ${{ steps.old_version.outputs.OLD_VERSION }} to ${{ steps.new_version.outputs.NEW_VERSION }}
+          title: Update infinitude from
+          body: Update Infinitude from ${{ steps.old_version.outputs.OLD_VERSION }} to ${{ steps.new_version.outputs.NEW_VERSION }}
+          branch: update-infinitude-src
+          delete-branch: true
+          base: auto-update-infinitude
+          reviewers: sosheskaz
+          assignees: sosheskaz
