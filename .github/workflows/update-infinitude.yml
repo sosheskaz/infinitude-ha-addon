@@ -21,7 +21,7 @@ jobs:
 
       - name: Update infinitude
         run: |
-          git submodule update infinitude-src
+          git submodule update --remote infinitude-src
 
       - name: Get new version
         id: new_version
