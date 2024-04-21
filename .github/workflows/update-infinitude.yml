@@ -4,7 +4,7 @@ name: Update Infinitude Source
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - auto-update-infinitude
+      - main
 
 jobs:
   update-infinitude:
@@ -38,6 +38,6 @@ jobs:
           body: Automatically updated Infinitude to ${{ steps.new_version.outputs.NEW_VERSION }}
           branch: update-infinitude-src
           delete-branch: true
-          base: auto-update-infinitude
+          base: main
           reviewers: sosheskaz
           assignees: sosheskaz
