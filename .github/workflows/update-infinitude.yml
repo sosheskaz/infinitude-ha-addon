@@ -34,8 +34,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # use the output from the previous task
           commit-message: Update Infinitude from ${{ steps.old_version.outputs.OLD_VERSION }} to ${{ steps.new_version.outputs.NEW_VERSION }}
-          title: Update infinitude from
-          body: Update Infinitude from ${{ steps.old_version.outputs.OLD_VERSION }} to ${{ steps.new_version.outputs.NEW_VERSION }}
+          title: Update Infinitude from ${{ steps.old_version.outputs.OLD_VERSION }} to ${{ steps.new_version.outputs.NEW_VERSION }}
+          body: Automatically updated Infinitude to ${{ steps.new_version.outputs.NEW_VERSION }}
           branch: update-infinitude-src
           delete-branch: true
           base: auto-update-infinitude
