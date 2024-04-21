@@ -15,12 +15,14 @@ jobs:
           submodules: true
 
       - name: Get current version
-        id: cur_version
+        id: old_version
         run: |
           echo "OLD_VERSION=$(git -C infinitude-src describe --tags --always)" >> $GITHUB_OUTPUT
 
       - name: Update infinitude
-        run: git submodule update infinitude-src
+        run: |
+          git submodule update infinitude-src
+          git submodule sync infinitude-src
 
       - name: Get new version
         id: new_version
