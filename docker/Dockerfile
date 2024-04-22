@@ -4,11 +4,10 @@ FROM ${INFINITUDE_BASE}
 RUN apt-get update && apt-get install -y \
     bash \
     jq \
-    tini \
     && rm -rf /var/lib/apt/lists/*
 
 COPY run.sh /
 
 MAINTAINER "Eric Miller (sosheskaz)"
 
-ENTRYPOINT ["tini", "--", "/run.sh"]
+ENTRYPOINT ["/run.sh"]
