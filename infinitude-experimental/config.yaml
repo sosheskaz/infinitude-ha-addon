@@ -1,7 +1,7 @@
 ---
 name: "Infinitude (Experimental)"
 description: Run Infinitude by nebulous as a Home Assistant Addon.
-version: "v2024.04.20.22"
+version: "v2024.04.22.23"
 image: ghcr.io/sosheskaz/infinitude-ha-addon
 slug: "infinitude-experimental"
 init: true
