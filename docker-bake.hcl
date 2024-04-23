@@ -12,8 +12,6 @@ variable "VERSION" {
 target "ci" {
   pull = true
 
-  platforms = ["linux/amd64", "linux/arm64"]
-
   context = "docker"
 }
 
@@ -23,6 +21,10 @@ target "infinitude-base" {
   platforms = ["linux/amd64", "linux/arm64"]
 
   context = "infinitude-src"
+
+  args = {
+    BASE_IMAGE = "ghcr.io/hassio-addons/debian-base:stable"
+  }
 
   tags = [
     "${INFINITUDE_IMAGE_NAME}",
