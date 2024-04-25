@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 24.22.23
+## v2024.22.23
 
 This release is focused on operational improvements to make this add-on maintainable in the logner
 term. It is the first supportable release.
