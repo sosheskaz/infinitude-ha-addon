@@ -1,4 +1,3 @@
 [submodule "infinitude-src"]
 	path = infinitude-src
-	url = https://github.com/sosheskaz/infinitude
-	branch = arg-build-image
+	url = https://github.com/nebulous/infinitude
