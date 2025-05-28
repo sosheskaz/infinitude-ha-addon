@@ -14,12 +14,14 @@ options:
   pass_reqs: 1020
   serial_tty: ""
   serial_socket: ""
+  purge_state: false
 schema:
   mode: list(Development|Production)
   app_secret: str
   pass_reqs: int(0,)
   serial_tty: str?
   serial_socket: str?
+  purge_state: bool?
 ports:
   3000/tcp: 34500
 ports_description:
