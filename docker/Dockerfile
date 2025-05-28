@@ -8,6 +8,6 @@ RUN apt-get update && apt-get install -y \
 
 COPY run.sh /
 
-MAINTAINER "Eric Miller (sosheskaz)"
+LABEL maintainer="Eric Miller (sosheskaz)"
 
 ENTRYPOINT ["/run.sh"]
