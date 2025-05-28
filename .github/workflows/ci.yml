@@ -28,5 +28,4 @@ jobs:
 
       - name: "Build images"
         run: |
-          docker buildx bake infinitude-base
           docker buildx bake ci
