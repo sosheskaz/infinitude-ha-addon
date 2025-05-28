@@ -25,5 +25,8 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: "Build images"
-        run: docker buildx bake ci
+        run: |
+          docker buildx bake infinitude-base
+          docker buildx bake ci
