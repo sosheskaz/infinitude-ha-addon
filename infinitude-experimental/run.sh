@@ -19,6 +19,7 @@ APP_SECRET="$(cfg 'app_secret')"
 PASS_REQS="$(cfg 'pass_reqs')"
 SERIAL_TTY="$(cfg 'serial_tty')"
 SERIAL_SOCKET="$(cfg 'serial_socket')"
+PURGE_STATE="$(cfg 'purge_state')"
 
 CFG="$(jq -s \
   --arg APP_SECRET "${APP_SECRET}" \
@@ -45,6 +46,11 @@ fi
 echo "${CFG}" > /infinitude/infinitude.json
 
 rm -rf /infinitude/state
+if [[ "${PURGE_STATE}" == "true" ]]
+then
+  rm -rf /data/infinitude/state
+fi
+
 mkdir -p /data/infinitude/state
 ln -sfT /data/infinitude/state /infinitude/state
 
