@@ -1,7 +1,7 @@
 ---
 name: "Infinitude"
 description: Run Infinitude by nebulous as a Home Assistant Addon.
-version: "v2024.10.09.27"
+version: "v2025.07.20.30"
 slug: "infinitude"
 init: true
 arch:
