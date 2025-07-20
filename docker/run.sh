@@ -4,12 +4,6 @@ set -e
 
 CONFIG_PATH=/data/options.json
 
-if [[ ! -f "${CONFIG_PATH}" ]]
-then
-  mkdir -p "$(dirname "${CONFIG_PATH}")"
-  echo '{}' > "${CONFIG_PATH}"
-fi
-
 cfg() {
   jq -r --arg key "$1" '.[$key]' < "${CONFIG_PATH}"
 }

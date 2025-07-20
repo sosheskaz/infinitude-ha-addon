@@ -40,6 +40,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: build base image
+        run: docker buildx bake infinitude-base --push
+
       - name: build release image
         run: docker buildx bake release --push
     outputs:
