@@ -4,14 +4,14 @@ pre-commit:
   jobs:
     - name: actionlint
       glob: ".github/workflows/**.{yml,yaml}"
-      run: mise exec -- actionlint .github/workflows/ci.yml
+      run: mise exec -- actionlint
 
     - name: zizmor
       glob: ".github/workflows/*.{yml,yaml}"
-      run: mise exec -- zizmor .github/workflows/ci.yml
+      run: mise exec -- zizmor .github/workflows
 
     - name: shellcheck
-      glob: "{docker/rootfs/etc/s6-overlay/s6-rc.d/*/run,tests/*.sh}"
+      glob: "{docker/rootfs/etc/s6-overlay/s6-rc.d/*/run,scripts/*.sh,tests/*.sh}"
       run: mise exec -- shellcheck -f "${SHELLCHECK_FORMAT:-tty}" -S error {staged_files}
 
     - name: python-compile

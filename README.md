@@ -5,7 +5,13 @@ It is not a part of the original project.
 
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fsosheskaz%2Finfinitude-ha-addon)
 
-This addon is rolling-release, and will track upstream infinitude.
+This add-on follows upstream Infinitude through reviewed, digest-pinned updates. New releases are
+built and verified before they can enter either channel:
+
+- **Infinitude (Experimental)** receives a reviewed activation pull request after its release image
+  is available for every supported architecture.
+- **Infinitude** receives a separate draft promotion pull request after the Experimental version has
+  had time to soak.
 
 ## Caveats
 

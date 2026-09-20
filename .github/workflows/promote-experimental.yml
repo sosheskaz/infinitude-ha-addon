@@ -1,0 +1,61 @@
+---
+name: Promote Experimental to Stable
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+    paths:
+      - infinitude-experimental/config.yaml
+
+concurrency:
+  group: promote-experimental
+  cancel-in-progress: false
+
+jobs:
+  propose-promotion:
+    name: Open stable promotion pull request
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Create automation token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1  # v3.2.0
+        with:
+          client-id: ${{ vars.AUTOMATION_APP_CLIENT_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Install tools
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d  # v4.2.0
+        with:
+          cache: false
+
+      - name: Prepare stable channel
+        run: bash scripts/promote-experimental.sh
+
+      - name: Read promoted version
+        id: version
+        run: echo "version=$(yq '.version' infinitude/config.yaml)" >> "${GITHUB_OUTPUT}"
+
+      - name: Create draft promotion pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1  # v8.1.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "chore(channel): promote ${{ steps.version.outputs.version }} to stable"
+          title: "chore(channel): promote ${{ steps.version.outputs.version }} to stable"
+          body: |
+            Promotes the current Experimental configuration and changelog to Stable for review.
+          branch: promote-experimental-to-stable
+          delete-branch: true
+          base: main
+          draft: always-true
+          reviewers: sosheskaz
+          assignees: sosheskaz
