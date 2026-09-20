@@ -1,49 +1,38 @@
-variable "INFINITUDE_IMAGE_NAME" {
-  default = "nebulous/infinitude:latest"
-}
-
 variable "IMAGE_NAME" {
-  default = "infinitude_ha_addon"
+  default = "ghcr.io/sosheskaz/infinitude-ha-addon"
 }
 
 variable "VERSION" {
+  default = "dev"
+}
+
+variable "REVISION" {
+  default = "unknown"
+}
+
+variable "BUILD_DATE" {
+  default = "unknown"
 }
 
 target "ci" {
-  pull = true
-
+  pull    = true
   context = "docker"
-}
-
-target "infinitude-base" {
-  pull = true
-
-  platforms = ["linux/amd64", "linux/arm64"]
-
-  context = "infinitude-src"
-
   args = {
-    BASE_IMAGE = "ghcr.io/hassio-addons/base:stable"
+    BUILD_DATE    = BUILD_DATE
+    BUILD_REF     = REVISION
+    BUILD_VERSION = VERSION
   }
-
-  tags = [
-    "${INFINITUDE_IMAGE_NAME}",
-  ]
-
+  tags = ["infinitude-ha-addon:ci"]
 }
 
 target "release" {
-  pull = false
-
+  pull      = true
   platforms = ["linux/amd64", "linux/arm64"]
-
+  context   = "docker"
   args = {
-    INFINITUDE_BASE = "${INFINITUDE_IMAGE_NAME}"
+    BUILD_DATE    = BUILD_DATE
+    BUILD_REF     = REVISION
+    BUILD_VERSION = VERSION
   }
-
-  context = "docker"
-
-  tags = [
-    "${IMAGE_NAME}:${VERSION}",
-  ]
+  tags = ["${IMAGE_NAME}:${VERSION}"]
 }

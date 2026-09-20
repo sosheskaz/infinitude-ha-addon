@@ -1,0 +1,42 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+set -o errexit -o nounset -o pipefail
+
+# Infinitude merges matching environment variables over its JSON config. Keep
+# application configuration in the file so Supervisor options always win.
+MODE="$(bashio::config 'mode')"
+
+cfg="$(jq -cn \
+    --arg app_secret "$(bashio::config 'app_secret')" \
+    --argjson pass_reqs "$(bashio::config 'pass_reqs')" \
+    '{app_secret: $app_secret, pass_reqs: $pass_reqs}')"
+
+if bashio::config.has_value 'serial_tty'; then
+    cfg="$(jq --arg value "$(bashio::config 'serial_tty')" \
+        '. + {serial_tty: $value}' <<< "${cfg}")"
+fi
+
+# The legacy launcher accidentally wrote this value to serial_tty.
+if bashio::config.has_value 'serial_socket'; then
+    cfg="$(jq --arg value "$(bashio::config 'serial_socket')" \
+        '. + {serial_socket: $value}' <<< "${cfg}")"
+fi
+
+umask 077
+rm -f /infinitude/infinitude.json
+printf '%s\n' "${cfg}" > /infinitude/infinitude.json
+
+rm -rf /infinitude/state
+mkdir -p /data/infinitude/state
+ln -sfn /data/infinitude/state /infinitude/state
+
+cd /infinitude
+bashio::log.info "Starting Infinitude daemon in ${MODE} mode."
+
+# Enable tracing only after credentials have been written to the protected
+# config file, so Development logs remain safe to share.
+if [ "${MODE}" = "Development" ]; then
+    set -x
+fi
+
+exec ./infinitude daemon -m "${MODE}"

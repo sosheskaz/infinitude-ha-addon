@@ -11,8 +11,15 @@ pre-commit:
       run: mise exec -- zizmor .github/workflows/ci.yml
 
     - name: shellcheck
-      glob: "**/*.sh"
+      glob: "{docker/rootfs/etc/s6-overlay/s6-rc.d/*/run,tests/*.sh}"
       run: mise exec -- shellcheck -f "${SHELLCHECK_FORMAT:-tty}" -S error {staged_files}
+
+    - name: python-compile
+      glob: "tests/*.py"
+      run: >-
+        python3 -c 'import ast, pathlib, sys;
+        [ast.parse(pathlib.Path(path).read_text()) for path in sys.argv[1:]]'
+        {staged_files}
 
     - name: yamllint
       glob: "**/*.{yml,yaml}"
