@@ -22,12 +22,13 @@ yq -e '
     .version == "v2.0.0" and
     .init == false and
     (.arch | join(",")) == "aarch64,amd64" and
-    .hassio_api == true and
+    (has("hassio_api") | not) and
     (.services | join(",")) == "mqtt:want" and
     .backup == "hot" and
     .schema.mqtt_broker == "str?" and
     .schema.mqtt_user == "str?" and
     .schema.mqtt_pass == "password?" and
+    .schema.mqtt_ssl == "bool?" and
     .schema.mqtt_prefix == "str?" and
     .schema.mqtt_topic == "str?"
 ' "${workdir}/experimental/config.yaml" >/dev/null

@@ -15,12 +15,13 @@ yq -i '
     .version = strenv(release_tag) |
     .init = false |
     .arch = ["aarch64", "amd64"] |
-    .hassio_api = true |
+    del(.hassio_api) |
     .services = ["mqtt:want"] |
     .backup = "hot" |
     .schema.mqtt_broker = "str?" |
     .schema.mqtt_user = "str?" |
     .schema.mqtt_pass = "password?" |
+    .schema.mqtt_ssl = "bool?" |
     .schema.mqtt_prefix = "str?" |
     .schema.mqtt_topic = "str?"
 ' "${experimental_config}"

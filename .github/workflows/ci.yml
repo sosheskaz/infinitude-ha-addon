@@ -35,6 +35,13 @@ jobs:
           MISE_EXEC_AUTO_INSTALL: "false"
         run: lefthook run pre-commit --all-files
 
+      - name: Run channel lifecycle examples
+        env:
+          MISE_EXEC_AUTO_INSTALL: "false"
+        run: |
+          mise exec -- yq --version
+          tests/channel-lifecycle.sh
+
   build:
     name: Build and smoke-test image
     runs-on: ubuntu-latest
