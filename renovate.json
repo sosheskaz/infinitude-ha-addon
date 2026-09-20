@@ -63,7 +63,7 @@
       "semanticCommitScope": "upstream"
     },
     {
-      "description": "Keep the smoke-test fixture immutable",
+      "description": "Keep smoke-test fixture images immutable",
       "matchManagers": ["custom.regex"],
       "minimumReleaseAge": "0 days",
       "pinDigests": true,
@@ -76,7 +76,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/^tests\\/runtime-smoke\\.sh$/"],
       "matchStrings": [
-        "mock_image=\"(?<depName>[^:]+):(?<currentValue>[^@]+)@(?<currentDigest>sha256:[a-f0-9]+)\""
+        "(?:mock_image|mqtt_test_image)=\"(?<depName>[^:]+):(?<currentValue>[^@]+)@(?<currentDigest>sha256:[a-f0-9]+)\""
       ],
       "datasourceTemplate": "docker"
     }
