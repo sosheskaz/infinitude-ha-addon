@@ -46,6 +46,15 @@
       "semanticCommitScope": "docker"
     },
     {
+      "description": "Keep the privileged development container immutable",
+      "matchManagers": ["devcontainer"],
+      "matchDepTypes": ["image"],
+      "minimumReleaseAge": "0 days",
+      "pinDigests": true,
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "devcontainer"
+    },
+    {
       "description": "Give upstream Infinitude updates distinct review context",
       "matchManagers": ["dockerfile"],
       "matchDatasources": ["docker"],
