@@ -3,6 +3,7 @@ set -o errexit -o nounset -o pipefail
 
 image="${1:-infinitude-ha-addon:ci}"
 expected_version="${2:-ci}"
+mock_image="docker.io/library/python:3.14-alpine@sha256:016508ba505da24f7139765bc4bb669df4e88eb2f12eeadd571bf2f88d7533df"
 workdir=""
 container=""
 mock=""
@@ -81,7 +82,7 @@ prepare_example() {
         mock_args+=(--env "MQTT_SERVICE_JSON=${mqtt_service}")
     fi
     docker run "${mock_args[@]}" \
-        docker.io/library/python:3.14-alpine@sha256:016508ba505da24f7139765bc4bb669df4e88eb2f12eeadd571bf2f88d7533df \
+        "${mock_image}" \
         python /mock-supervisor.py >/dev/null
 
     for _ in $(seq 1 30); do
