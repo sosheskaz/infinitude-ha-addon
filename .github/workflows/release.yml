@@ -115,6 +115,7 @@ jobs:
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
         with:
           persist-credentials: false
+          ref: main
 
       - name: Install tools
         uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d  # v4.2.0
@@ -139,5 +140,8 @@ jobs:
           branch: activate-experimental-${{ needs.metadata.outputs.tag }}
           delete-branch: true
           base: main
+          add-paths: |
+            infinitude-experimental/config.yaml
+            release-please-config.json
           reviewers: sosheskaz
           assignees: sosheskaz
