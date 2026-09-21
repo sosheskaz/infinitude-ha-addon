@@ -1,0 +1,84 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "automerge": false,
+  "dependencyDashboard": true,
+  "semanticCommits": "enabled",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/__fixtures__/**"
+  ],
+  "packageRules": [
+    {
+      "description": "Let patch and minor releases age before review",
+      "matchUpdateTypes": ["patch", "minor"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Let major releases age longer before review",
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "14 days"
+    },
+    {
+      "description": "Keep GitHub Actions immutable and reviewable",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "actions"
+    },
+    {
+      "description": "Update development tools through Mise",
+      "matchManagers": ["mise"],
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "mise"
+    },
+    {
+      "description": "Keep container inputs immutable",
+      "matchManagers": ["dockerfile"],
+      "minimumReleaseAge": "0 days",
+      "pinDigests": true,
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "docker"
+    },
+    {
+      "description": "Keep the privileged development container immutable",
+      "matchManagers": ["devcontainer"],
+      "matchDepTypes": ["image"],
+      "minimumReleaseAge": "0 days",
+      "pinDigests": true,
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "devcontainer"
+    },
+    {
+      "description": "Give upstream Infinitude updates distinct review context",
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/nebulous/infinitude"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "upstream"
+    },
+    {
+      "description": "Keep the smoke-test fixture immutable",
+      "matchManagers": ["custom.regex"],
+      "minimumReleaseAge": "0 days",
+      "pinDigests": true,
+      "semanticCommitType": "test",
+      "semanticCommitScope": "docker"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^tests\\/runtime-smoke\\.sh$/"],
+      "matchStrings": [
+        "mock_image=\"(?<depName>[^:]+):(?<currentValue>[^@]+)@(?<currentDigest>sha256:[a-f0-9]+)\""
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
+}

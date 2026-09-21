@@ -1,0 +1,84 @@
+---
+name: Renovate
+
+on:  # yamllint disable-line rule:truthy
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - .github/workflows/renovate.yml
+      - mise.toml
+      - renovate.json
+
+concurrency:
+  group: renovate-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'production' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate config and extraction
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout proposed config
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Install pinned Renovate
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d  # v4.2.0
+        with:
+          cache: true
+
+      - name: Validate repository config
+        env:
+          MISE_EXEC_AUTO_INSTALL: "false"
+        run: mise exec -- renovate-config-validator --strict --no-global renovate.json
+
+      - name: Verify native config discovery and dependency extraction
+        env:
+          LOG_LEVEL: debug
+          MISE_EXEC_AUTO_INSTALL: "false"
+          RENOVATE_BASE_BRANCHES: main
+          RENOVATE_REQUIRE_CONFIG: required
+        run: mise exec -- renovate --platform=local --dry-run=extract --print-config=true
+
+  renovate:
+    name: Propose dependency updates
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Create automation token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1  # v3.2.0
+        with:
+          client-id: ${{ vars.AUTOMATION_APP_CLIENT_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
+          permission-workflows: write
+
+      - name: Checkout tooling definition
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Install pinned Renovate
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d  # v4.2.0
+        with:
+          cache: false
+
+      - name: Run Renovate
+        env:
+          MISE_EXEC_AUTO_INSTALL: "false"
+          RENOVATE_AUTODISCOVER: "false"
+          RENOVATE_REPOSITORIES: '["${{ github.repository }}"]'
+          RENOVATE_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: mise exec -- renovate
