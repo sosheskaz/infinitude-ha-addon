@@ -153,10 +153,11 @@ run_example() {
 
 validate_addon_contract
 
-base_options='{"app_secret":"runtime-smoke-secret","mode":"Production","pass_reqs":0,"serial_tty":"/dev/ttyUSB0","serial_socket":"127.0.0.1:9876"}'
+base_options='{"app_secret":"runtime-smoke-secret","mode":"Production","pass_reqs":0,"serial_tty":"/dev/ttyUSB0","serial_socket":"127.0.0.1:9876","ignored_option":"dropped-by-supervisor"}'
 auto_service='{"host":"mqtt.internal","port":1883,"ssl":false,"protocol":"3.1.1","username":"ha-user","password":"ha-pass"}'
+anonymous_service='{"host":"mqtt.internal","port":1883,"ssl":false,"protocol":"3.1.1"}'
 tls_service='{"host":"mqtt.internal","port":8883,"ssl":true,"protocol":"3.1.1","username":"ha-tls-user","password":"ha-tls-pass"}'
-unsupported_protocol_service='{"host":"mqtt.internal","port":1883,"ssl":false,"protocol":"5","username":"ha-v5-user","password":"ha-v5-pass"}'
+unsupported_protocol_service='{"host":"mqtt.internal","port":1883,"ssl":false,"protocol":"3.1","username":"ha-legacy-user","password":"ha-legacy-pass"}'
 manual_options='{"app_secret":"manual-app-secret","mode":"Production","pass_reqs":0,"mqtt_broker":"manual.example:2883","mqtt_user":"manual-user","mqtt_pass":"manual-pass","mqtt_prefix":"custom-discovery","mqtt_topic":"upstairs"}'
 
 # Common path: Supervisor's MQTT service is enough to enable discovery.
@@ -166,6 +167,14 @@ run_example \
     "${auto_service}" \
     '.pass_reqs == 0 and .serial_tty == "/dev/ttyUSB0" and .serial_socket == "127.0.0.1:9876" and .mqtt_broker == "mqtt.internal:1883" and .mqtt_user == "ha-user" and .mqtt_pass == "ha-pass" and ([keys[] | select(startswith("mqtt_"))] | length) == 3 and (has("mqtt_prefix") | not) and (has("mqtt_topic") | not)' \
     'runtime-smoke-secret,ha-pass'
+
+# Brokers without authentication omit both optional credential fields.
+run_example \
+    anonymous-mqtt \
+    "${base_options}" \
+    "${anonymous_service}" \
+    '.mqtt_broker == "mqtt.internal:1883" and (has("mqtt_user") | not) and (has("mqtt_pass") | not) and ([keys[] | select(startswith("mqtt_"))] | length) == 1' \
+    'runtime-smoke-secret'
 
 # Infinitude does not currently support TLS, so reject those service details
 # without making the core proxy unavailable.
@@ -204,14 +213,14 @@ docker exec "${container}" perl \
     -MData::ParseBinary -MDigest::CRC -MHash::AsObject -MIO::Termios -MNet::MQTT::Simple \
     -e 1
 
-# Infinitude's client speaks MQTT 3.1.1; reject incompatible service metadata
+# Infinitude's client speaks MQTT 3.1.1; reject Supervisor's legacy 3.1 option
 # without making the core proxy unavailable.
 run_example \
     unsupported-mqtt-protocol \
     "${base_options}" \
     "${unsupported_protocol_service}" \
     '([keys[] | select(startswith("mqtt_"))] | length) == 0' \
-    'runtime-smoke-secret,ha-v5-pass' \
-    'protocol 5 is unsupported'
+    'runtime-smoke-secret,ha-legacy-pass' \
+    'protocol 3.1 is unsupported'
 
 echo "runtime smoke test passed"

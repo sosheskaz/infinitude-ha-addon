@@ -21,6 +21,10 @@ pre-commit:
         [ast.parse(pathlib.Path(path).read_text()) for path in sys.argv[1:]]'
         {staged_files}
 
+    - name: mock-supervisor-tests
+      glob: "tests/{mock-supervisor.py,test_mock_supervisor.py}"
+      run: python3 -m unittest tests/test_mock_supervisor.py
+
     - name: yamllint
       glob: "**/*.{yml,yaml}"
       run: mise exec -- yamllint -c .yamllint.yml {staged_files}

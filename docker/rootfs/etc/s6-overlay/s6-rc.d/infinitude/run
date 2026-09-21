@@ -45,6 +45,12 @@ elif bashio::services.available 'mqtt'; then
         mqtt_broker="$(bashio::services 'mqtt' 'host'):$(bashio::services 'mqtt' 'port')"
         mqtt_user="$(bashio::services 'mqtt' 'username')"
         mqtt_pass="$(bashio::services 'mqtt' 'password')"
+        if [ "${mqtt_user}" = "null" ]; then
+            mqtt_user=""
+        fi
+        if [ "${mqtt_pass}" = "null" ]; then
+            mqtt_pass=""
+        fi
         bashio::log.info "Configured MQTT from the Home Assistant MQTT service."
     fi
 fi
