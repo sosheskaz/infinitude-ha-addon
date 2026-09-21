@@ -1,0 +1,30 @@
+---
+pre-commit:
+  parallel: true
+  jobs:
+    - name: actionlint
+      glob: ".github/workflows/**.{yml,yaml}"
+      run: mise exec -- actionlint .github/workflows/ci.yml
+
+    - name: zizmor
+      glob: ".github/workflows/*.{yml,yaml}"
+      run: mise exec -- zizmor .github/workflows/ci.yml
+
+    - name: shellcheck
+      glob: "**/*.sh"
+      run: mise exec -- shellcheck -f "${SHELLCHECK_FORMAT:-tty}" -S error {staged_files}
+
+    - name: yamllint
+      glob: "**/*.{yml,yaml}"
+      run: mise exec -- yamllint -c .yamllint.yml {staged_files}
+
+commit-msg:
+  commands:
+    conventional:
+      run: |
+        commit_msg_file="{1}"
+        pattern='^(feat|fix|refactor|test|docs|chore|build|ci|perf|deps)(\([a-z-]+\))?!?: .+'
+        if ! grep -Eq "$pattern" "$commit_msg_file"; then
+          echo "invalid commit message. use conventional commits: type(scope): subject"
+          exit 1
+        fi
