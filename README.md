@@ -23,3 +23,17 @@ set `mode` to `Development`.
 
 This add-on exposes infinitude on a port (by default `34500`) on the home assistant machine.
 Consider any network security implications there may be.
+
+## MQTT / Home Assistant Discovery
+
+Infinitude can publish thermostat entities through Home Assistant MQTT Discovery.
+
+- **Automatic:** When a compatible Home Assistant MQTT service is available, the add-on uses its
+  broker and credentials automatically. No MQTT options are required.
+- **External broker:** Set `mqtt_broker` to `host:port`; add `mqtt_user` and `mqtt_pass` when the
+  broker requires authentication. `mqtt_prefix` and `mqtt_topic` override Infinitude's discovery
+  defaults.
+- **Off:** When neither `mqtt_broker` nor a Home Assistant MQTT service is available, MQTT remains
+  disabled.
+
+TLS-enabled MQTT brokers are not currently supported.

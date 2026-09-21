@@ -1,4 +1,4 @@
-FROM docker.io/nebulous/infinitude:latest@sha256:10172dfabbdae3336b442ed9072db35c53301abb992730cff4a315fd18f088e2 AS app
+FROM docker.io/nebulous/infinitude:2026.9.0@sha256:df0b5b2f37a357e81679359edbc99600543b8e4bc88776e5767692e2d0d0c9e7 AS app
 
 FROM ghcr.io/hassio-addons/base:21.0.0@sha256:26c14772d1eb72c8aa7f0b6866a2bc13ada705f77b8c263fcfa09116a5e00e25
 

@@ -3,12 +3,12 @@ name: "Infinitude"
 description: Run Infinitude by nebulous as a Home Assistant Addon.
 version: "v2025.07.20.30"
 slug: "infinitude"
-init: true
+init: false
 arch:
   - aarch64
   - amd64
-  - armv7
-  - i386
+services:
+  - mqtt:want
 options:
   app_secret: Pogotudinal
   mode: Production
@@ -21,6 +21,11 @@ schema:
   pass_reqs: int(0,)
   serial_tty: str?
   serial_socket: str?
+  mqtt_broker: str?
+  mqtt_user: str?
+  mqtt_pass: password?
+  mqtt_prefix: str?
+  mqtt_topic: str?
 ports:
   3000/tcp: 34500
 ports_description:

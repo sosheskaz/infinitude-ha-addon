@@ -22,6 +22,62 @@ if bashio::config.has_value 'serial_socket'; then
         '. + {serial_socket: $value}' <<< "${cfg}")"
 fi
 
+# A user-supplied broker is authoritative. Otherwise, use Supervisor's MQTT
+# service when one is available; leaving the broker empty keeps MQTT disabled.
+mqtt_broker=""
+mqtt_user=""
+mqtt_pass=""
+if bashio::config.has_value 'mqtt_broker'; then
+    mqtt_broker="$(bashio::config 'mqtt_broker')"
+    if bashio::config.has_value 'mqtt_user'; then
+        mqtt_user="$(bashio::config 'mqtt_user')"
+    fi
+    if bashio::config.has_value 'mqtt_pass'; then
+        mqtt_pass="$(bashio::config 'mqtt_pass')"
+    fi
+elif bashio::services.available 'mqtt'; then
+    mqtt_protocol="$(bashio::services 'mqtt' 'protocol')"
+    if [ "${mqtt_protocol}" != "3.1.1" ]; then
+        bashio::log.error "Ignoring the Home Assistant MQTT service because protocol ${mqtt_protocol} is unsupported."
+    elif [ "$(bashio::services 'mqtt' 'ssl')" = "true" ]; then
+        bashio::log.error "Ignoring the Home Assistant MQTT service because TLS is unsupported."
+    else
+        mqtt_broker="$(bashio::services 'mqtt' 'host'):$(bashio::services 'mqtt' 'port')"
+        mqtt_user="$(bashio::services 'mqtt' 'username')"
+        mqtt_pass="$(bashio::services 'mqtt' 'password')"
+        if [ "${mqtt_user}" = "null" ]; then
+            mqtt_user=""
+        fi
+        if [ "${mqtt_pass}" = "null" ]; then
+            mqtt_pass=""
+        fi
+        bashio::log.info "Configured MQTT from the Home Assistant MQTT service."
+    fi
+fi
+
+if bashio::var.has_value "${mqtt_broker}"; then
+    cfg="$(jq --arg value "${mqtt_broker}" \
+        '. + {mqtt_broker: $value}' <<< "${cfg}")"
+    if bashio::var.has_value "${mqtt_user}"; then
+        cfg="$(jq --arg value "${mqtt_user}" \
+            '. + {mqtt_user: $value}' <<< "${cfg}")"
+    fi
+    if bashio::var.has_value "${mqtt_pass}"; then
+        cfg="$(jq --arg value "${mqtt_pass}" \
+            '. + {mqtt_pass: $value}' <<< "${cfg}")"
+    fi
+    if bashio::config.has_value 'mqtt_prefix'; then
+        cfg="$(jq --arg value "$(bashio::config 'mqtt_prefix')" \
+            '. + {mqtt_prefix: $value}' <<< "${cfg}")"
+    fi
+    if bashio::config.has_value 'mqtt_topic'; then
+        cfg="$(jq --arg value "$(bashio::config 'mqtt_topic')" \
+            '. + {mqtt_topic: $value}' <<< "${cfg}")"
+    fi
+else
+    bashio::log.info "MQTT is disabled because no broker is configured."
+fi
+
 umask 077
 rm -f /infinitude/infinitude.json
 printf '%s\n' "${cfg}" > /infinitude/infinitude.json
