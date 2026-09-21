@@ -28,7 +28,6 @@ yq -e '
     .schema.mqtt_broker == "str?" and
     .schema.mqtt_user == "str?" and
     .schema.mqtt_pass == "password?" and
-    .schema.mqtt_ssl == "bool?" and
     .schema.mqtt_prefix == "str?" and
     .schema.mqtt_topic == "str?"
 ' "${workdir}/experimental/config.yaml" >/dev/null
