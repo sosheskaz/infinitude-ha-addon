@@ -36,7 +36,7 @@ jobs:
         run: lefthook run pre-commit --all-files
 
   build:
-    name: Build image
+    name: Build and smoke-test image
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -49,5 +49,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c  # v4.2.0
 
+      - name: Verify s6 service files
+        run: |
+          test -x docker/rootfs/etc/s6-overlay/s6-rc.d/infinitude/run
+          [ "$(cat docker/rootfs/etc/s6-overlay/s6-rc.d/infinitude/type)" = "longrun" ]
+          [ ! -s docker/rootfs/etc/s6-overlay/s6-rc.d/infinitude/dependencies.d/base ]
+          [ ! -s docker/rootfs/etc/s6-overlay/s6-rc.d/user/contents.d/infinitude ]
+
       - name: Build image
-        run: docker buildx bake ci
+        env:
+          REVISION: ${{ github.sha }}
+          VERSION: ci
+        run: docker buildx bake ci --load
+
+      - name: Smoke-test image
+        run: tests/runtime-smoke.sh infinitude-ha-addon:ci
