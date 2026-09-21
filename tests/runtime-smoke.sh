@@ -7,6 +7,25 @@ workdir=""
 container=""
 mock=""
 network=""
+addon_config="$(yq -o=json '.' infinitude/config.yaml)"
+
+validate_addon_contract() {
+    local config
+
+    for config in infinitude/config.yaml infinitude-experimental/config.yaml; do
+        yq -o=json '.' "${config}" | jq -e '
+            .init == false and
+            .arch == ["aarch64", "amd64"] and
+            (.services | index("mqtt:want") != null) and
+            (.hassio_api // false) == false and
+            .schema.mqtt_broker == "str?" and
+            .schema.mqtt_user == "str?" and
+            .schema.mqtt_pass == "password?" and
+            .schema.mqtt_prefix == "str?" and
+            .schema.mqtt_topic == "str?"
+        ' >/dev/null
+    done
+}
 
 cleanup() {
     local status=$?
@@ -54,6 +73,7 @@ prepare_example() {
         --name "${mock}"
         --network "${network}"
         --network-alias supervisor
+        --env "ADDON_CONFIG_JSON=${addon_config}"
         --volume "${workdir}/data/options.json:/fixtures/options.json:ro"
         --volume "${PWD}/tests/mock-supervisor.py:/mock-supervisor.py:ro"
     )
@@ -115,26 +135,29 @@ run_example() {
     docker exec "${container}" test -L /infinitude/state
     test "$(docker exec "${container}" readlink /infinitude/state)" = "/data/infinitude/state"
 
+    logs="$(docker logs "${container}" 2>&1)"
     old_ifs="${IFS}"
     IFS=,
     for secret in ${secrets}; do
-        if docker logs "${container}" 2>&1 | grep -Fq "${secret}"; then
+        if grep -Fq "${secret}" <<< "${logs}"; then
             echo "${name} log exposed a credential" >&2
             exit 1
         fi
     done
     IFS="${old_ifs}"
     if [ -n "${expected_log}" ]; then
-        docker logs "${container}" 2>&1 | grep -Fq "${expected_log}"
+        grep -Fq "${expected_log}" <<< "${logs}"
     fi
     echo "${name} example passed"
 }
 
-base_options='{"app_secret":"runtime-smoke-secret","log_level":"info","mode":"Production","pass_reqs":0,"serial_tty":"/dev/ttyUSB0","serial_socket":"127.0.0.1:9876"}'
+validate_addon_contract
+
+base_options='{"app_secret":"runtime-smoke-secret","mode":"Production","pass_reqs":0,"serial_tty":"/dev/ttyUSB0","serial_socket":"127.0.0.1:9876"}'
 auto_service='{"host":"mqtt.internal","port":1883,"ssl":false,"protocol":"3.1.1","username":"ha-user","password":"ha-pass"}'
 tls_service='{"host":"mqtt.internal","port":8883,"ssl":true,"protocol":"3.1.1","username":"ha-tls-user","password":"ha-tls-pass"}'
 unsupported_protocol_service='{"host":"mqtt.internal","port":1883,"ssl":false,"protocol":"5","username":"ha-v5-user","password":"ha-v5-pass"}'
-manual_options='{"app_secret":"manual-app-secret","log_level":"info","mode":"Production","pass_reqs":0,"mqtt_broker":"manual.example:2883","mqtt_user":"manual-user","mqtt_pass":"manual-pass","mqtt_prefix":"custom-discovery","mqtt_topic":"upstairs"}'
+manual_options='{"app_secret":"manual-app-secret","mode":"Production","pass_reqs":0,"mqtt_broker":"manual.example:2883","mqtt_user":"manual-user","mqtt_pass":"manual-pass","mqtt_prefix":"custom-discovery","mqtt_topic":"upstairs"}'
 
 # Common path: Supervisor's MQTT service is enough to enable discovery.
 run_example \
