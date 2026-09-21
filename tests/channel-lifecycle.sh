@@ -12,26 +12,25 @@ cp infinitude-experimental/config.yaml "${workdir}/experimental/config.yaml"
 cp infinitude/config.yaml "${workdir}/stable/config.yaml"
 cp infinitude-experimental/CHANGELOG.md "${workdir}/experimental/CHANGELOG.md"
 cp release-please-config.json "${workdir}/release-please-config.json"
+cp "${workdir}/experimental/config.yaml" "${workdir}/experimental-before.yaml"
+cp "${workdir}/release-please-config.json" "${workdir}/release-please-before.json"
 cp "${workdir}/stable/config.yaml" "${workdir}/stable-before.yaml"
 
 EXPERIMENTAL_CONFIG="${workdir}/experimental/config.yaml" \
 RELEASE_PLEASE_CONFIG="${workdir}/release-please-config.json" \
     bash scripts/activate-experimental.sh v2.0.0
 
+yq -e '.version == "v2.0.0"' "${workdir}/experimental/config.yaml" >/dev/null
+diff \
+    <(yq 'del(.version)' "${workdir}/experimental-before.yaml") \
+    <(yq 'del(.version)' "${workdir}/experimental/config.yaml")
 yq -e '
-    .version == "v2.0.0" and
-    .init == false and
-    (.arch | join(",")) == "aarch64,amd64" and
-    (has("hassio_api") | not) and
-    (.services | join(",")) == "mqtt:want" and
-    .backup == "hot" and
-    .schema.mqtt_broker == "str?" and
-    .schema.mqtt_user == "str?" and
-    .schema.mqtt_pass == "password?" and
-    .schema.mqtt_prefix == "str?" and
-    .schema.mqtt_topic == "str?"
-' "${workdir}/experimental/config.yaml" >/dev/null
-yq -e 'has("bootstrap-sha") | not' "${workdir}/release-please-config.json" >/dev/null
+    has("bootstrap-sha") | not and
+    ."initial-version" == "2.0.0"
+' "${workdir}/release-please-config.json" >/dev/null
+diff \
+    <(yq -o=json 'del(."bootstrap-sha")' "${workdir}/release-please-before.json") \
+    "${workdir}/release-please-config.json"
 cmp "${workdir}/stable/config.yaml" "${workdir}/stable-before.yaml"
 
 EXPERIMENTAL_CONFIG="${workdir}/experimental/config.yaml" \
