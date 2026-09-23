@@ -2,6 +2,15 @@
 
 ## 2.0.0 (2026-09-23)
 
+### Upgrading from v2025 releases
+
+This release switches the add-on from date-based versions to semantic versioning. Home Assistant
+may show **Update available** but disable the Update button because it compares `v2025.*` as newer
+than `v2.0.0`. If that happens, go to **Settings → Tools → Actions** and run **Install update** for
+`update.infinitude_experimental_update` with `backup: true`. Confirm the add-on shows `v2.0.0` and
+**Running** afterward. See the [upgrade guide](https://github.com/sosheskaz/infinitude-ha-addon#upgrading-to-v200)
+for the exact action YAML and architecture requirements.
+
 
 ### ⚠ BREAKING CHANGES
 

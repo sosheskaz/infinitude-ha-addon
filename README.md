@@ -13,6 +13,29 @@ built and verified before they can enter either channel:
 - **Infinitude** receives a separate draft promotion pull request after the Experimental version has
   had time to soak.
 
+## Upgrading to v2.0.0 from v2025 releases
+
+Version `v2.0.0` switches the add-on from date-based versions to semantic versioning and updates
+upstream Infinitude to `2026.9.0`. It supports amd64 and aarch64; armv7 and i386 are no longer
+supported. Check your Home Assistant host's architecture before upgrading.
+
+Home Assistant may show **Update available** for an installed `v2025.*` add-on while its update
+dialog says **Up-to-date** and disables the Update button. Home Assistant compares the old
+date-based version as newer than `v2.0.0`. If this happens, use **Settings → Tools → Actions**, select
+**Install update**, switch to YAML mode, and run:
+
+```yaml
+action: update.install
+target:
+  entity_id: update.infinitude_experimental_update
+data:
+  backup: true
+```
+
+The entity ID above is for Infinitude (Experimental). For the Stable add-on, use its own update
+entity ID, which you can find under **Settings → Tools → States**. After the action completes,
+confirm that the add-on's Info page shows `v2.0.0` and **Running**.
+
 ## Caveats
 
 Serial devices are not yet supported, as I do not have a serial device to test against.
