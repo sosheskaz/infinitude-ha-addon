@@ -93,6 +93,14 @@ jobs:
           IMAGE: ghcr.io/sosheskaz/infinitude-ha-addon:${{ needs.metadata.outputs.tag }}
         run: bash tests/verify-release-image.sh "${IMAGE}" "${EXPECTED_VERSION}" "${EXPECTED_REVISION}"
 
+      - name: Smoke-test published image
+        env:
+          EXPECTED_REVISION: ${{ steps.build-metadata.outputs.revision }}
+          EXPECTED_VERSION: ${{ needs.metadata.outputs.tag }}
+          IMAGE: ghcr.io/sosheskaz/infinitude-ha-addon:${{ needs.metadata.outputs.tag }}
+          MISE_EXEC_AUTO_INSTALL: "false"
+        run: tests/published-image-smoke.sh "${IMAGE}" "${EXPECTED_VERSION}" "${EXPECTED_REVISION}"
+
   activate-experimental:
     name: Propose Experimental activation
     needs:
