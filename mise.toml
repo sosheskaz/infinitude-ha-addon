@@ -1,6 +1,6 @@
 [tools]
 node = "24.17.0"
-lefthook = "2.1.9"
+lefthook = "2.1.16"
 # Verified against matching npm integrity and Yarn source tag; this release lacks provenance.
 "npm:renovate" = { version = "43.233.3", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
 "aqua:rhysd/actionlint" = "1.7.12"
