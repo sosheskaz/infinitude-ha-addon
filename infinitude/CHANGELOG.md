@@ -1,14 +1,23 @@
 # Changelog
 
+## [2.0.1](https://github.com/sosheskaz/infinitude-ha-addon/compare/v2.0.0...v2.0.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* **docker:** update ghcr.io/hassio-addons/base docker tag to v21.0.8 ([#60](https://github.com/sosheskaz/infinitude-ha-addon/issues/60)) ([7745670](https://github.com/sosheskaz/infinitude-ha-addon/commit/7745670d5a9955b80a29baa3bb288d511518fb14))
+
 ## 2.0.0 (2026-09-23)
 
 ### Upgrading from v2025 releases
 
-This release switches from date-based versions (`v2025.*`) to semantic versions (`v2.0.0`). Home Assistant may show **Update available** while the update dialog says **Up-to-date** and disables the update because its version comparison treats `v2025.*` as newer than `v2.0.0`.
+This release switches the add-on from date-based versions to semantic versioning. Home Assistant
+may show **Update available** but disable the Update button because it compares `v2025.*` as newer
+than `v2.0.0`. If that happens, go to **Settings → Tools → Actions** and run **Install update** for
+`update.infinitude_experimental_update` with `backup: true`. Confirm the add-on shows `v2.0.0` and
+**Running** afterward. See the [upgrade guide](https://github.com/sosheskaz/infinitude-ha-addon#upgrading-to-v200)
+for the exact action YAML and architecture requirements.
 
-To install the Stable Infinitude update, open **Settings → Tools → Actions**, choose **Install update**, and find the exact entity ID under **Settings → Tools → States**. Switch to YAML mode, set `target.entity_id` to the Stable Infinitude update entity and `data.backup: true`, then choose **Perform action**. After installation, confirm the Stable Infinitude add-on is running version `v2.0.0`.
-
-See [Upgrading to v2.0.0](https://github.com/sosheskaz/infinitude-ha-addon#upgrading-to-v200) for the required YAML and supported architectures.
 
 ### ⚠ BREAKING CHANGES
 
