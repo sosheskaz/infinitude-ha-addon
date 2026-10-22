@@ -3,7 +3,7 @@ set -o errexit -o nounset -o pipefail
 
 image="${1:-infinitude-ha-addon:ci}"
 expected_version="${2:-ci}"
-mock_image="docker.io/library/python:3.14-alpine@sha256:01ddf82b43479870a7ea87037b7d68472bef12cc244941843c26bb75bf9a9b04"
+mock_image="docker.io/library/python:3.14-alpine@sha256:601e99e090cb08c2784a42395487709500bc39930307fe72f3f11a8f3c430762"
 workdir=""
 container=""
 mock=""
