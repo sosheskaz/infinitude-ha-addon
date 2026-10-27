@@ -1,6 +1,6 @@
 FROM docker.io/nebulous/infinitude:2026.9.0@sha256:df0b5b2f37a357e81679359edbc99600543b8e4bc88776e5767692e2d0d0c9e7 AS app
 
-FROM ghcr.io/hassio-addons/base:21.0.8@sha256:52f79347fa3e0ceb58af92aecca8165c34099067dde8c5f767e95d9cdd56099f
+FROM ghcr.io/hassio-addons/base:21.0.10@sha256:e3624401ddd4941b20bf0273d3a1b3d4a0d9061f4034fa3e4722bcc38c8bb4b2
 
 ARG BUILD_DATE=unknown
 ARG BUILD_REF=unknown
