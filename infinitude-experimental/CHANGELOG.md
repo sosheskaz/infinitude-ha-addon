@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/sosheskaz/infinitude-ha-addon/compare/v2.0.2...v2.0.3) (2026-11-19)
+
+
+### Bug Fixes
+
+* **docker:** update ghcr.io/hassio-addons/base docker tag to v21.0.11 ([#71](https://github.com/sosheskaz/infinitude-ha-addon/issues/71)) ([292f490](https://github.com/sosheskaz/infinitude-ha-addon/commit/292f49022924a58de93708bb5e6e177fa81410fe))
+
 ## [2.0.2](https://github.com/sosheskaz/infinitude-ha-addon/compare/v2.0.1...v2.0.2) (2026-11-01)
 
 
